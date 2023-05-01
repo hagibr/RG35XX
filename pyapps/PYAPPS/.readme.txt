@@ -1,0 +1,7 @@
+My thanks to Discord user aveferrum#9190 and Github user notro
+
+Python/         This folder contains python executable and libraries. Note the file adb_run_repl.sh, that launches Python3 repl at ADB Shell.
+fbtft_test/     Here we have the test script and library for framebuffers in pure python
+sample/         Sample app based on aveferrum's Python3_SAMPLE file
+
+It's a good start to have a framebuffer library but I'm still working on a way to make use of libSDL in this device
