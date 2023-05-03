@@ -35,11 +35,11 @@ class Framebuffer(gfx.BaseGFX):
 	def __init__(self, dev):
 		self.dev = dev
 		self.fbfd = os.open(dev, os.O_RDWR)
-		vinfo = struct.unpack("8I12I16I4I", fcntl.ioctl(self.fbfd, FBIOGET_VSCREENINFO, " "*((8+12+16+4)*4)))
-		finfo = struct.unpack("16cL4I3HI", fcntl.ioctl(self.fbfd, FBIOGET_FSCREENINFO, " "*48))
+		vinfo = struct.unpack("8I12I16I4I", fcntl.ioctl(self.fbfd, FBIOGET_VSCREENINFO, " "*struct.calcsize("8I12I16I4I")))
+		finfo = struct.unpack("16cL4I3HI", fcntl.ioctl(self.fbfd, FBIOGET_FSCREENINFO, " "*struct.calcsize("16cL4I3HI")))
 
-		bytes_per_pixel = (vinfo[6] + 7) // 8
-		screensize = vinfo[0] * vinfo[1] * bytes_per_pixel
+		bytes_per_pixel = (vinfo[6] + 7) // 8 # bits_per_pixel {1,16,32} -> bytes_per_pixel {1,2,4}
+		screensize = vinfo[17] # smem_len
 
 		fbp = mmap.mmap(self.fbfd, screensize, flags=mmap.MAP_SHARED, prot=mmap.PROT_READ|mmap.PROT_WRITE)
 
