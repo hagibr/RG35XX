@@ -1,0 +1,12 @@
+Based on project https://github.com/notro/fbtft_test
+I've simplified some things, removed unused files and adapted to python3
+
+Original README:
+fbtft_test
+==========
+
+Project for testing Linux Framebuffer drivers.
+
+Run tests: python test_fb.py
+
+Pause test by pressing a key.
