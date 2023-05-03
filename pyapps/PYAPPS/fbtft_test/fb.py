@@ -39,7 +39,7 @@ class Framebuffer(gfx.BaseGFX):
 		finfo = struct.unpack("16cL4I3HI", fcntl.ioctl(self.fbfd, FBIOGET_FSCREENINFO, " "*struct.calcsize("16cL4I3HI")))
 
 		bytes_per_pixel = (vinfo[6] + 7) // 8 # bits_per_pixel {1,16,32} -> bytes_per_pixel {1,2,4}
-		screensize = vinfo[17] # smem_len
+		screensize = vinfo[0] * vinfo[1] * bytes_per_pixel
 
 		fbp = mmap.mmap(self.fbfd, screensize, flags=mmap.MAP_SHARED, prot=mmap.PROT_READ|mmap.PROT_WRITE)
 
