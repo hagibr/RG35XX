@@ -56,6 +56,7 @@ class Draw:
 #				self.fb.putpixel(i, start_pos[1], color)
 			return
 		
+		# angular coefficient
 		m = (end_pos[1] - start_pos[1]) / float(end_pos[0] - start_pos[0])
 		if (end_pos[0] == 0):
 			b = end_pos[1]
@@ -108,6 +109,11 @@ class BaseGFX:
 					+ (y + self.yoffset) * self.line_length)
 			self.fbp.seek(int(offset))
 			self.fbp.write(struct.pack("H", color))
+		elif (self.bits_per_pixel == 32):
+			offset = ((x + self.xoffset) * self.bytes_per_pixel
+					+ (y + self.yoffset) * self.line_length)
+			self.fbp.seek(int(offset))
+			self.fbp.write(struct.pack("I", color))
 		else:
 			raise ValueError("%s bits per pixel is not supported" % self.bits_per_pixel)
 
@@ -117,11 +123,15 @@ class BaseGFX:
 		if (y < 0 or y > self.yres-1):
 			raise ValueError("Illegal y value: %r" % y)
 
-#		if (self.bits_per_pixel == 1):
-#			pass
-#		elif (self.bits_per_pixel == 16):
 		if (self.bits_per_pixel == 16):
 			colstr = struct.pack("H", color)
+			offset = ((x + self.xoffset) * self.bytes_per_pixel
+					+ (y + self.yoffset) * self.line_length)
+			self.fbp.seek(int(offset))
+			for i in range(0, length):
+				self.fbp.write(colstr)
+		elif(self.bits_per_pixel == 32):
+			colstr = struct.pack("I", color)
 			offset = ((x + self.xoffset) * self.bytes_per_pixel
 					+ (y + self.yoffset) * self.line_length)
 			self.fbp.seek(int(offset))
@@ -143,8 +153,11 @@ class BaseGFX:
 			colstr = struct.pack("H", color)
 			buf = (self.screensize//2)*colstr
 			self.fbp.seek(0)
-			# for i in range(0, self.screensize/2):
-			# 	buf += colstr
+			self.fbp.write(buf)
+		elif (self.bits_per_pixel == 32):
+			colstr = struct.pack("I", color)
+			buf = (self.screensize//4)*colstr
+			self.fbp.seek(0)
 			self.fbp.write(buf)
 		else:
 			for y in range(0, int(self.yres)):
