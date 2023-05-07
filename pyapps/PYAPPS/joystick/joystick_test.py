@@ -28,23 +28,23 @@ key_map = {
     (0, 1, 10): "VOL+_RELEASED",
     (1, 1, 11): "VOL-_PRESSED",
     (0, 1, 11): "VOL-_RELEASED",
-    (-32767, 2, 7): "UP_PRESSED",
-    (32767, 2, 7): "DOWN_PRESSED",
-    (0, 2, 7): "UP_DOWN_RELEASED",
-    (-32767, 2, 6): "LEFT_PRESSED",
-    (32767, 2, 6): "RIGHT_PRESSED",
-    (0, 2, 6): "LEFT_RIGHT_RELEASED",
     (32767, 2, 2): "L2_PRESSED",
     (-32767, 2, 2): "L2_RELEASED",
     (32767, 2, 5): "R2_PRESSED",
     (-32767, 2, 5): "R2_RELEASED",
+    (-32767, 2, 6): "LEFT_PRESSED",
+    (32767, 2, 6): "RIGHT_PRESSED",
+    (0, 2, 6): "LEFT_RIGHT_RELEASED",
+    (-32767, 2, 7): "UP_PRESSED",
+    (32767, 2, 7): "DOWN_PRESSED",
+    (0, 2, 7): "UP_DOWN_RELEASED",
 }
 js_device = "/dev/input/js0"
 EVENT_SIZE = struct.calcsize("LhBB")
 js_file = open(js_device, "rb")
 
-device = '/dev/fb0'
-fb = Framebuffer(device)
+fb_device = '/dev/fb0'
+fb = Framebuffer(fb_device)
 white = fb.rgb(255,255,255)
 black = fb.rgb(0,0,0)
 
@@ -63,21 +63,81 @@ while event:
     if( vtm in key_map):
         current_key = key_map[vtm]
         
-        # Correcting the UP_DOWN_RELEASED to UP_RELEASED or DOWN_RELEASED
-        if( current_key == "UP_DOWN_RELEASED" ):
-            if( last_updown == "UP_PRESSED" ):
-                current_key = "UP_RELEASED"
-            elif( last_updown == "DOWN_PRESSED" ):
-                current_key = "DOWN_RELEASED"
-        # Same with LEFT_RIGHT_RELEASED
-        elif( current_key == "LEFT_RIGHT_RELEASED" ):
-            if( last_leftright == "LEFT_PRESSED" ):
-                current_key = "LEFT_RELEASED"
-            elif( last_leftright == "RIGHT_PRESSED" ):
-                current_key = "RIGHT_RELEASED"
-        
-        fb.putstr(-1, -1, last_key, black, 4)
-        fb.putstr(-1, -1, current_key, white, 4)
+        # Each key has a position. I've decided these positions empirically.
+        if( current_key == "PWR_PRESSED"):
+            fb.putstr(560, 70, "PWR", white, 4)
+        elif( current_key == "PWR_RELEASED"):
+            fb.putstr(560, 70, "PWR", black, 4)
+        elif( current_key == "VOL+_PRESSED"):
+            fb.putstr(10, 70, "VOL+", white, 4)
+        elif( current_key == "VOL+_RELEASED"):
+            fb.putstr(10, 70, "VOL+", black, 4)
+        elif( current_key == "VOL-_PRESSED"):
+            fb.putstr(10, 150, "VOL-", white, 4)
+        elif( current_key == "VOL-_RELEASED"):
+            fb.putstr(10, 150, "VOL-", black, 4)
+        elif( current_key == "L1_PRESSED"):
+            fb.putstr(30, 220, "L1", white, 4)
+        elif( current_key == "L1_RELEASED"):
+            fb.putstr(30, 220, "L1", black, 4)
+        elif( current_key == "L2_PRESSED"):
+            fb.putstr(150, 220, "L2", white, 4)
+        elif( current_key == "L2_RELEASED"):
+            fb.putstr(150, 220, "L2", black, 4)
+        elif( current_key == "R2_PRESSED"):
+            fb.putstr(440, 220, "R2", white, 4)
+        elif( current_key == "R2_RELEASED"):
+            fb.putstr(440, 220, "R2", black, 4)
+        elif( current_key == "R1_PRESSED"):
+            fb.putstr(560, 220, "R1", white, 4)
+        elif( current_key == "R1_RELEASED"):
+            fb.putstr(560, 220, "R1", black, 4)
+        elif( current_key == "LEFT_PRESSED"):
+            fb.putstr(20, 350, "L", white, 4)
+            fb.putstr(170, 350, "R", black, 4)
+        elif( current_key == "RIGHT_PRESSED"):
+            fb.putstr(170, 350, "R", white, 4)
+            fb.putstr(20, 350, "L", black, 4)
+        elif( current_key == "LEFT_RIGHT_RELEASED"):
+            fb.putstr(20, 350, "L", black, 4)
+            fb.putstr(170, 350, "R", black, 4)
+        elif( current_key == "UP_PRESSED"):
+            fb.putstr(95, 275, "U", white, 4)
+            fb.putstr(95, 425, "D", black, 4)
+        elif( current_key == "DOWN_PRESSED"):
+            fb.putstr(95, 425, "D", white, 4)
+            fb.putstr(95, 275, "U", black, 4)
+        elif( current_key == "UP_DOWN_RELEASED"):
+            fb.putstr(95, 275, "U", black, 4)
+            fb.putstr(95, 425, "D", black, 4)
+        elif( current_key == "MENU_PRESSED"):
+            fb.putstr(-1, 300, "MENU", white, 4)
+        elif( current_key == "MENU_RELEASED"):
+            fb.putstr(-1, 300, "MENU", black, 4)
+        elif( current_key == "X_PRESSED"):
+            fb.putstr(520, 275, "X", white, 4)
+        elif( current_key == "X_RELEASED"):
+            fb.putstr(520, 275, "X", black, 4)
+        elif( current_key == "B_PRESSED"):
+            fb.putstr(520, 425, "B", white, 4)
+        elif( current_key == "B_RELEASED"):
+            fb.putstr(520, 425, "B", black, 4)
+        elif( current_key == "Y_PRESSED"):
+            fb.putstr(445, 350, "Y", white, 4)
+        elif( current_key == "Y_RELEASED"):
+            fb.putstr(445, 350, "Y", black, 4)
+        elif( current_key == "A_PRESSED"):
+            fb.putstr(595, 350, "A", white, 4)
+        elif( current_key == "A_RELEASED"):
+            fb.putstr(595, 350, "A", black, 4)
+        elif( current_key == "SELECT_PRESSED"):
+            fb.putstr(170, 450, "SELECT", white, 4)
+        elif( current_key == "SELECT_RELEASED"):
+            fb.putstr(170, 450, "SELECT", black, 4)
+        elif( current_key == "START_PRESSED"):
+            fb.putstr(340, 450, "START", white, 4)
+        elif( current_key == "START_RELEASED"):
+            fb.putstr(340, 450, "START", black, 4)
 
         # Exits on 2 quick presses on menu button
         if( current_key == "MENU_RELEASED" ):
@@ -90,14 +150,4 @@ while event:
 
         last_key = current_key
 
-        # UP_DOWN_RELEASED / LEFT_RIGHT_RELEASED logic
-        if( last_key == "UP_PRESSED" ):
-            last_updown = "UP_PRESSED"
-        elif( last_key == "DOWN_PRESSED" ):
-            last_updown = "DOWN_PRESSED"
-        elif( last_key == "LEFT_PRESSED" ):
-            last_leftright = "LEFT_PRESSED"
-        elif( last_key == "RIGHT_PRESSED" ):
-            last_leftright = "RIGHT_PRESSED"
-        
     event = js_file.read(EVENT_SIZE)
